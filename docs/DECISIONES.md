@@ -40,3 +40,14 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 - **Fecha:** 2026-10-27
 - **Estado:** pospuesta hasta empezar el Front-End.
 - **Opciones:** Expo Go en celular físico (opción más simple y gratuita) o emulador de Android.
+
+---
+
+## D-004: ES Modules (`import`/`export`) en vez de CommonJS
+
+- **Fecha:** 2026-10-27
+- **Contexto:** Node soporta dos sistemas de módulos: CommonJS (`require`) y ES Modules (`import`).
+- **Alternativas:** (a) CommonJS, el default histórico de Node; (b) ES Modules.
+- **Decisión:** ES Modules, con `"type": "module"` en el `package.json` del Back-End.
+- **Motivo:** Es el estándar actual de JavaScript, se parece al `import` de Java y es la misma sintaxis que
+  usa React Native, así que se aprende una sola vez. Costo: hay que escribir la extensión `.js` en los imports.
