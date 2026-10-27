@@ -456,11 +456,11 @@ Se corre con `npm test`. Busca solo los archivos `*.test.js` (nuestros tests est
 | Pieza | Qué es | Paralelo JUnit |
 |---|---|---|
 | `describe("grupo", () => {...})` | Agrupa tests; se pueden anidar. | La clase de test |
-| `it("hace algo", () => {...})` | Un caso de prueba. `test(...)` es un alias idéntico. | `@Test` |
+| `test("hace algo", () => {...})` | Un caso de prueba. `it(...)` es un alias idéntico (se usó `test` en este TP). | `@Test` |
 | `expect(valor).toBe(esperado)` | Compara valores primitivos con `===`. | `assertEquals` |
 | `expect(() => ...).toThrow("mensaje")` | Verifica que la función lance un error (con ese mensaje). | `assertThrows` |
 
-- **`it` vs `test`:** son lo mismo. `it` se lee como oración dentro de un `describe` ("it rechaza un nombre vacío").
+- **`it` vs `test`:** son lo mismo. `it` se lee como oración dentro de un `describe` ("it rechaza un nombre vacío"); en este TP se usa `test`.
 - **`toThrow` recibe una función**, no el resultado: si el error salta antes de que Jest lo pueda atrapar, el test explota.
 - **Factory con `overrides`:** una función con datos válidos por defecto, y cada test pisa solo lo que prueba.
   ```js
