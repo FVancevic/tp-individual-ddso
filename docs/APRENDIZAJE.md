@@ -13,6 +13,7 @@ la explicación o analogía que terminó de aclararlo.
 - [npm vs Maven (paralelismo con Java)](#npm-vs-maven-paralelismo-con-java)
 - [Comandos de npm](#comandos-de-npm)
 - [Node y Express: observaciones](#node-y-express-observaciones)
+- [Anatomía de package.json](#anatomía-de-packagejson)
 
 ---
 
@@ -192,3 +193,20 @@ Es lo opuesto a Spring Boot, que es "opinionado" (convención sobre configuraci�
 **Casi.** Cumple el mismo rol (configuración fuera del código: puertos, claves), pero son **variables de entorno**
 que se leen con `process.env.PUERTO`. Se mantiene fuera de git (por eso está en el `.gitignore`).
 Para este TP lo más probable es que casi no lo necesitemos (no hay base de datos ni claves externas).
+
+---
+
+## Anatomía de `package.json`
+
+Generado con `npm init`. Campos de `backend/package.json`:
+
+| Campo | Qué es | Paralelo `pom.xml` |
+|---|---|---|
+| `name`, `version` | Identidad del proyecto. | `artifactId`, `version` |
+| `description`, `author`, `license` | Metadatos. | `description`, `developers`, `licenses` |
+| `type` | `"module"` activa `import`/`export` (D-004). `"commonjs"` sería `require`. | Sin equivalente directo. |
+| `main` | Punto de entrada del proyecto. No arranca nada por sí solo. | Parecido a `<mainClass>`. |
+| `scripts` | Tareas ejecutables con `npm run <nombre>`. | Goals/plugins de Maven. |
+| `dependencies` | Librerías necesarias para correr. Aparece al hacer `npm install <paquete>`. | `<dependencies>` |
+
+> `npm init` también pregunta por `type` en las versiones nuevas de npm. Elegimos `module` ahí mismo.
