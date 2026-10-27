@@ -1,22 +1,32 @@
 export class TipoEntrada {
-    constructor(nombre, descripcion, precio, cupo) {
-        this.validarParametros(nombre, descripcion, precio, cupo);
+    constructor({ nombre, descripcion, precio, cupo } = {}) {
+        validarParametros({ nombre, descripcion, precio, cupo });
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.cupo = cupo;
     }
 
-    validarParametros(nombre, descripcion, precio, cupo) {
-        if (!nombre || !descripcion || !Number.isFinite(precio) || !Number.isInteger(cupo)) {
-            throw new Error('Los campos nombre, descripcion, precio y cupo son obligatorios');
-        }
-        if( precio < 0 || cupo < 0) {
-            throw new Error('El precio y el cupo deben ser mayores o iguales a 0');
-        }
-    }
-
     hayCupoPara(cantidad) {
         return this.cupo >= cantidad;
     }
+}
+
+function validarParametros({ nombre, descripcion, precio, cupo }) {
+    if (!esTextoNoVacio(nombre)) {
+        throw new Error('El nombre es obligatorio');
+    }
+    if (descripcion !== undefined && typeof descripcion !== 'string') {
+        throw new Error('La descripcion debe ser un texto');
+    }
+    if (!Number.isFinite(precio) || precio < 0) {
+        throw new Error('El precio debe ser un numero mayor o igual a 0');
+    }
+    if (!Number.isInteger(cupo) || cupo < 0) {
+        throw new Error('El cupo debe ser un numero entero mayor o igual a 0');
+    }
+}
+
+function esTextoNoVacio(valor) {
+    return typeof valor === 'string' && valor.trim() !== '';
 }
