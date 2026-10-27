@@ -49,5 +49,5 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 - **Contexto:** Node soporta dos sistemas de módulos: CommonJS (`require`) y ES Modules (`import`).
 - **Alternativas:** (a) CommonJS, el default histórico de Node; (b) ES Modules.
 - **Decisión:** ES Modules, con `"type": "module"` en el `package.json` del Back-End.
-- **Motivo:** Es el estándar actual de JavaScript, se parece al `import` de Java y es la misma sintaxis que
+- **Motivo:** Es el estándar actual de JavaScript, es la sintaxis que se usa en la cátedra, se parece al `import` de Java y es la misma que
   usa React Native, así que se aprende una sola vez. Costo: hay que escribir la extensión `.js` en los imports.
