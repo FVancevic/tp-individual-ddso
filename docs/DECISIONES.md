@@ -93,7 +93,7 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 
 ---
 
-## D-008: Jest como framework de tests, junto al código
+## D-008: Jest como framework de tests *(la ubicación de los tests fue reemplazada por D-012)*
 
 - **Fecha:** 2026-10-27
 - **Contexto:** Se quieren tests automatizados del dominio. Jest es el estándar de la industria y es el que usa React Native.
@@ -145,3 +145,16 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
   asignar un campo desde afuera (`entrada.precio = -5`); se compensa por convención del equipo.
 - **Impacto:** se descartan los `toJSON()` y los getters previstos en D-009. La nota de YAGNI sobre métodos de negocio
   (`descontarCupo`, etc.) sigue vigente.
+
+---
+
+## D-012: Tests en `backend/tests/`, replicando la estructura de `src/`
+
+- **Fecha:** 2026-10-27
+- **Contexto:** D-008 había propuesto los tests junto a cada archivo (`TipoEntrada.test.js` al lado de `TipoEntrada.js`).
+- **Alternativas:** (a) tests junto al código; (b) carpeta `tests/` en `backend/` que replica la estructura de `src/`.
+- **Decisión:** (b). Ej: `src/domain/TipoEntrada.js` → `tests/domain/TipoEntrada.test.js`. Jest los encuentra por el
+  sufijo `.test.js`, sin configuración extra. Los tests de integración (endpoints) también irán en `tests/`, en su
+  propia subcarpeta cuando existan.
+- **Motivo:** Separa el código de producción del de prueba y es la convención de Java (`src/main` / `src/test`), que
+  ya se conoce. Costo: los imports son más largos (`../../src/domain/TipoEntrada.js`).
