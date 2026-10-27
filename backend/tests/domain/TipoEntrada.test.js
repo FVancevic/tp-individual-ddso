@@ -27,6 +27,12 @@ describe("TipoEntrada", () => {
             expect(entrada.descripcion).toBe("");
         });
 
+        test("se crea sin descripción", () => {
+            const entrada = crearTipoEntrada({ descripcion: undefined });
+            
+            expect(entrada.descripcion).toBeUndefined();
+        });
+
         test("se crea con precio 0", () => {
             const entrada = crearTipoEntrada({ precio: 0 });
             
@@ -56,7 +62,6 @@ describe("TipoEntrada", () => {
         test("rechaza una descripción que no es texto", () => {
             expect(() => crearTipoEntrada({ descripcion: 123 })).toThrow("La descripcion debe ser un texto");
         });
-
 
         test("rechaza un precio negativo", () => {
             expect(() => crearTipoEntrada({ precio: -100 })).toThrow("El precio debe ser un numero mayor o igual a 0");
