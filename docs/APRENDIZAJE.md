@@ -21,6 +21,7 @@ la explicación o analogía que terminó de aclararlo.
 - [Destructuring de objetos](#destructuring-de-objetos)
 - [Campos privados y getters](#campos-y-métodos-privados--y-getters)
 - [Orden del archivo: hoisting y guard clauses](#orden-del-archivo-hoisting-y-guard-clauses)
+- [Shorthand de propiedades](#shorthand-de-propiedades--nombre-precio-)
 
 ---
 
@@ -429,3 +430,18 @@ if (!Number.isFinite(precio) || precio < 0) {
 ```
 Una sola condición por campo y un mensaje por campo. Se lanza el primer error encontrado (no se acumulan: YAGNI).
 Un helper que no usa `this` va como función del módulo sin `export`: lo que no se exporta es privado del archivo.
+
+---
+
+## Shorthand de propiedades (`{ nombre, precio }`)
+
+Si la clave y la variable se llaman igual, se escribe una sola vez:
+```js
+{ nombre, precio }   // equivale a { nombre: nombre, precio: precio }
+```
+Es la operación **espejo** del destructuring:
+- **Destructuring:** saca valores de un objeto hacia variables → `const { nombre } = obj`.
+- **Shorthand:** arma un objeto a partir de variables → `const obj = { nombre }`.
+
+En `TipoEntrada`, el constructor desestructura lo que recibe y `validarParametros({ nombre, descripcion, precio, cupo })`
+lo vuelve a armar (shorthand) para que la función lo desestructure en sus parámetros.
