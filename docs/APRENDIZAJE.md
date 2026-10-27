@@ -18,6 +18,8 @@ la explicación o analogía que terminó de aclararlo.
 - [Primer servidor Express](#primer-servidor-express-backendsrcindexjs)
 - [Cómo responde el servidor a un request HTTP](#cómo-responde-el-servidor-a-un-request-http)
 - [Validar valores: falsy](#validar-valores-la-trampa-de-los-falsy)
+- [Destructuring de objetos](#destructuring-de-objetos)
+- [Campos privados y getters](#campos-y-métodos-privados--y-getters)
 
 ---
 
@@ -369,3 +371,38 @@ Una clase sin `export` solo se usa dentro de su archivo (como una clase Java sin
   (KISS). Es una convención del equipo no mutar campos directamente.
 
 > **Actualización:** la limitación de campos públicos fue revertida: se adoptan campos privados con getters (ver D-009).
+
+---
+
+## Destructuring de objetos
+
+Extrae propiedades de un objeto a variables, en una línea.
+```js
+const { nombre, precio } = entrada;        // equivale a: const nombre = entrada.nombre; const precio = entrada.precio;
+function f({ nombre, precio } = {}) { }    // también en parámetros; "= {}" es el valor por defecto si no se pasa nada
+```
+- En un constructor permite **parámetros con nombre**: `new TipoEntrada({ nombre: "General", precio: 5000, ... })`.
+  El orden no importa y no se pueden cruzar dos números por error (ver D-010). Reemplaza al *builder* de Java.
+- Sin el `= {}`, llamar sin argumentos da un `TypeError` confuso al desestructurar `undefined`.
+- Se ve en todos lados en React: `function Entrada({ titulo, precio })`.
+
+## Campos y métodos privados (`#`) y getters
+
+```js
+export class TipoEntrada {
+  #nombre;                         // 1. declarar el campo arriba, con #
+  constructor({ nombre } = {}) {
+    this.#nombre = nombre;         // 2. usarlo siempre con el # incluido
+  }
+  get nombre() { return this.#nombre; }   // 3. getter: se lee como entrada.nombre, SIN paréntesis
+  #validar() { ... }                      // métodos también pueden ser privados: this.#validar()
+}
+```
+- El `#` es parte del nombre. Fuera de la clase, `entrada.#nombre` es un error de sintaxis.
+- **Paralelo Java:** `private` + `getNombre()`.
+- **Consecuencia en tests:** `expect(entrada).toEqual(otra)` no compara campos privados; hay que verificar con los
+  getters, campo por campo.
+- **Consecuencia en JSON:** `JSON.stringify(entrada)` da `{}`; hace falta un método `toJSON()` (ver D-009).
+- **Honestidad sobre "lo que se usa en la industria":** son estándar del lenguaje, pero no la práctica dominante en
+  JavaScript (es común dejar campos públicos, o usar TypeScript con `private`). Se eligió por garantizar que la
+  entidad no quede inválida (D-009), no por ser "la" forma estándar.
