@@ -89,3 +89,31 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
   solo lugar. Contra: el controller debe capturar el error y convertirlo en respuesta HTTP.
 - **Reglas de `TipoEntrada`:** `nombre` y `descripcion` obligatorios; `precio` número finito `>= 0` (0 permite
   entradas gratuitas); `cupo` entero `>= 0`.
+
+---
+
+## D-008: Jest como framework de tests, junto al código
+
+- **Fecha:** 2026-10-27
+- **Contexto:** Se quieren tests automatizados del dominio. Jest es el estándar de la industria y es el que usa React Native.
+- **Alternativas:** (a) `node:test`, el runner incluido en Node 24 (sin dependencias, ES Modules nativo);
+  (b) Jest.
+- **Decisión:** Jest, instalado como `devDependency`. Los tests van junto al archivo que prueban
+  (`TipoEntrada.js` → `TipoEntrada.test.js`).
+- **Motivo:** Es lo que se usa en la práctica y servirá también en el Front-End. Costo: con ES Modules hay que
+  ejecutarlo con `node --experimental-vm-modules node_modules/jest/bin/jest.js` (el script `"test"` lo encapsula)
+  y muestra un `ExperimentalWarning` inofensivo. La alternativa `node:test` quedó descartada por preferencia, no
+  por limitación técnica.
+
+## D-009: Campos privados (`#`) con getters explícitos en las entidades de dominio
+
+- **Fecha:** 2026-10-27
+- **Contexto:** En JavaScript los campos son públicos y se pueden modificar desde afuera saltando las validaciones
+  del constructor (ej: `entrada.precio = -5`).
+- **Alternativas:** (a) campos públicos y convención de no mutarlos; (b) campos privados `#` con getters.
+- **Decisión:** (b). Cada campo es `#campo`, se lee con un getter y solo se modifica mediante métodos de negocio
+  que validan (ej. `descontarCupo`). Reemplaza a la limitación aceptada en la nota de YAGNI.
+- **Motivo:** Garantiza que la entidad no pueda quedar en estado inválido y se parece al encapsulamiento de Java.
+- **Costo conocido:** `JSON.stringify(entidad)` devuelve `{}` (los campos privados y los getters del prototipo no se
+  serializan). Habrá que definir un método `toJSON()` en cada entidad (o mapear a objetos planos en el controller)
+  antes de responder con `res.json(...)`.
