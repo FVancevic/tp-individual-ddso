@@ -14,6 +14,7 @@ la explicación o analogía que terminó de aclararlo.
 - [Comandos de npm](#comandos-de-npm)
 - [Node y Express: observaciones](#node-y-express-observaciones)
 - [Anatomía de package.json](#anatomía-de-packagejson)
+- [Qué pasa al hacer npm install express](#qué-pasa-al-hacer-npm-install-express)
 
 ---
 
@@ -210,3 +211,21 @@ Generado con `npm init`. Campos de `backend/package.json`:
 | `dependencies` | Librerías necesarias para correr. Aparece al hacer `npm install <paquete>`. | `<dependencies>` |
 
 > `npm init` también pregunta por `type` en las versiones nuevas de npm. Elegimos `module` ahí mismo.
+
+---
+
+## Qué pasa al hacer `npm install express`
+
+Tres cambios en `backend/`:
+
+1. **`package.json`** suma `"dependencies": { "express": "^5.3.0" }`.
+2. **`package-lock.json`** (nuevo): versión **exacta** de cada paquete instalado. Garantiza que todos instalen lo mismo. **Se commitea.**
+3. **`node_modules/`** (nueva): los paquetes descargados. **No se commitea** (está en `.gitignore`). Se reconstruye con `npm install`.
+
+### Versionado `^5.3.0` (semver)
+Las versiones son `MAYOR.MENOR.PARCHE`. El `^` acepta cualquier versión más nueva que **no cambie la mayor**:
+`5.3.0` y `5.9.1` sí, `6.0.0` no (una versión mayor puede romper compatibilidad).
+
+### Dependencias transitivas
+Express declara 28 dependencias directas, y estas a su vez dependen de otras: `node_modules/` terminó con 65
+carpetas. No hay que conocerlas. **Paralelo Java:** igual que las dependencias transitivas de Maven al agregar un starter de Spring.
