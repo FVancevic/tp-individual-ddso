@@ -14,7 +14,6 @@ describe("TipoEntrada", () => {
     describe("creación", () => {
         test("se crea con datos válidos", () => {
             const entrada = crearTipoEntrada();
-
             expect(entrada.nombre).toBe("General");
             expect(entrada.descripcion).toBe("Acceso general");
             expect(entrada.precio).toBe(5000);
@@ -23,25 +22,21 @@ describe("TipoEntrada", () => {
 
         test("se crea con descripción vacía", () => {
             const entrada = crearTipoEntrada({ descripcion: "" });
-            
             expect(entrada.descripcion).toBe("");
         });
 
         test("se crea sin descripción", () => {
             const entrada = crearTipoEntrada({ descripcion: undefined });
-            
             expect(entrada.descripcion).toBeUndefined();
         });
 
         test("se crea con precio 0", () => {
             const entrada = crearTipoEntrada({ precio: 0 });
-            
             expect(entrada.precio).toBe(0);
         });
 
         test("se crea con cupo 0", () => {
             const entrada = crearTipoEntrada({ cupo: 0 });
-            
             expect(entrada.cupo).toBe(0);
         });
     });
