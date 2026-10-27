@@ -117,3 +117,14 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 - **Costo conocido:** `JSON.stringify(entidad)` devuelve `{}` (los campos privados y los getters del prototipo no se
   serializan). Habrá que definir un método `toJSON()` en cada entidad (o mapear a objetos planos en el controller)
   antes de responder con `res.json(...)`.
+
+---
+
+## D-010: Constructores de entidades reciben un objeto (parámetros con nombre)
+
+- **Fecha:** 2026-10-27
+- **Contexto:** `TipoEntrada` tiene cuatro parámetros; dos son números (`precio`, `cupo`) y podrían intercambiarse sin error.
+- **Alternativas:** (a) parámetros posicionales; (b) un único objeto desestructurado (`constructor({ nombre, ... } = {})`).
+- **Decisión:** (b) para las entidades con varios campos.
+- **Motivo:** Cada valor lleva su nombre, el orden no importa y se evita intercambiar argumentos del mismo tipo sin
+  que nada falle. JavaScript no tiene argumentos con nombre; esto cumple el rol del *builder* de Java.
