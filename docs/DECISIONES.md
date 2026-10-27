@@ -87,8 +87,9 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 - **Decisión:** (b). La entidad lanza `Error` si los datos son inválidos y el controller lo traduce a un 400.
 - **Motivo:** Una entidad nunca debería existir en estado inválido, sin importar quién la cree. La regla queda en un
   solo lugar. Contra: el controller debe capturar el error y convertirlo en respuesta HTTP.
-- **Reglas de `TipoEntrada`:** `nombre` y `descripcion` obligatorios; `precio` número finito `>= 0` (0 permite
-  entradas gratuitas); `cupo` entero `>= 0`.
+- **Reglas de `TipoEntrada`:** `nombre` texto no vacío (ni solo espacios); `descripcion` opcional, pero si viene debe
+  ser texto; `precio` número finito `>= 0` (0 permite entradas gratuitas); `cupo` entero `>= 0`. Un mensaje de error
+  distinto por campo; se lanza el primero que falle (no se acumulan, por YAGNI).
 
 ---
 
