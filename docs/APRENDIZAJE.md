@@ -354,3 +354,16 @@ Esto compensa la decisión D-002 de no usar TypeScript.
 
 ### `export`: lo que no se exporta es privado
 Una clase sin `export` solo se usa dentro de su archivo (como una clase Java sin `public`).
+
+---
+
+## Modificar entidades: métodos de negocio en vez de setters (YAGNI / KISS)
+
+**Pregunta:** si otra clase modifica un campo de `TipoEntrada`, ¿hay que validar en setters?
+
+- **YAGNI:** no se crean setters por las dudas. Se agrega código cuando un caso de uso lo necesita.
+- Cuando aparezca la necesidad, se crea un **método con nombre de negocio** que valide la regla, en vez de un
+  setter genérico. Ejemplo previsto: `descontarCupo(cantidad)` al comprar (el cupo no puede quedar negativo).
+- **Limitación conocida de JavaScript:** los campos son públicos; `entrada.precio = -5` desde afuera funciona y
+  salta la validación del constructor. Se evitaría con campos privados `#` y getters, pero queda fuera de alcance
+  (KISS). Es una convención del equipo no mutar campos directamente.
