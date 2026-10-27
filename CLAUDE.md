@@ -31,3 +31,9 @@ pueda **explicar y defender cada decisión** en un video de entrega (5-10 min). 
 - Se entrega un video: un flujo elegido, explicando Back-End, Front-End y recorrido en la UI, más
   conclusión sobre el uso de IA (ventajas, desventajas, dificultades, aprendizajes, valoración personal).
   Por eso conviene registrar también **dónde la IA ayudó y dónde falló o hubo que corregirla**.
+
+## Perfil del usuario
+
+Conoce bastante **Java con Spring Boot**. Usar ese paralelismo (Maven, `pom.xml`, `@RestController`,
+controller/service/repository, JPA, etc.) para explicar conceptos nuevos de Node/Express/React cuando
+ayude, y marcar las diferencias donde la analogía se rompe.
