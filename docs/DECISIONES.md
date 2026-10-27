@@ -105,7 +105,7 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
   y muestra un `ExperimentalWarning` inofensivo. La alternativa `node:test` quedó descartada por preferencia, no
   por limitación técnica.
 
-## D-009: Campos privados (`#`) con getters explícitos en las entidades de dominio
+## D-009: Campos privados (`#`) con getters explícitos en las entidades de dominio *(reemplazada por D-011)*
 
 - **Fecha:** 2026-10-27
 - **Contexto:** En JavaScript los campos son públicos y se pueden modificar desde afuera saltando las validaciones
@@ -128,3 +128,19 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 - **Decisión:** (b) para las entidades con varios campos.
 - **Motivo:** Cada valor lleva su nombre, el orden no importa y se evita intercambiar argumentos del mismo tipo sin
   que nada falle. JavaScript no tiene argumentos con nombre; esto cumple el rol del *builder* de Java.
+
+---
+
+## D-011: Campos públicos en las entidades (reemplaza a D-009)
+
+- **Fecha:** 2026-10-27
+- **Contexto:** Se evaluó usar campos privados `#` con getters (D-009). Se aclaró que no es la práctica dominante en
+  JavaScript y que el objetivo es seguir lo que es estándar en la industria.
+- **Alternativas:** (a) campos privados `#` con getters; (b) campos públicos, validando en el constructor y
+  modificando solo mediante métodos de negocio.
+- **Decisión:** (b). Solo se usarán campos privados en una clase concreta si surge una necesidad real (YAGNI).
+- **Motivo:** Es lo habitual en JavaScript, mantiene el código más simple, `JSON.stringify` y `res.json(entidad)`
+  funcionan sin código extra y los tests pueden comparar objetos con `toEqual`. Costo asumido: nada impide
+  asignar un campo desde afuera (`entrada.precio = -5`); se compensa por convención del equipo.
+- **Impacto:** se descartan los `toJSON()` y los getters previstos en D-009. La nota de YAGNI sobre métodos de negocio
+  (`descontarCupo`, etc.) sigue vigente.
