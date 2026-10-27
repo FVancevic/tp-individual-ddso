@@ -158,3 +158,14 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
   propia subcarpeta cuando existan.
 - **Motivo:** Separa el código de producción del de prueba y es la convención de Java (`src/main` / `src/test`), que
   ya se conoce. Costo: los imports son más largos (`../../src/domain/TipoEntrada.js`).
+
+---
+
+## D-013: Ramas `main` y `develop`
+
+- **Fecha:** 2026-10-27
+- **Contexto:** Se empezó a trabajar directamente sobre `main` y se publicó el repo en GitHub.
+- **Alternativas:** (a) todo en `main`; (b) `main` estable + `develop` para el trabajo diario.
+- **Decisión:** (b). Los commits diarios van a `develop`; `main` recibe merges de `develop` cuando hay un hito
+  terminado y con los tests pasando.
+- **Motivo:** `main` siempre queda en un estado presentable (útil para la entrega) y el trabajo en curso no lo rompe.
