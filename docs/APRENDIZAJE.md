@@ -370,7 +370,7 @@ Una clase sin `export` solo se usa dentro de su archivo (como una clase Java sin
   salta la validación del constructor. Se evitaría con campos privados `#` y getters, pero queda fuera de alcance
   (KISS). Es una convención del equipo no mutar campos directamente.
 
-> **Actualización:** la limitación de campos públicos fue revertida: se adoptan campos privados con getters (ver D-009).
+> **Actualización:** se evaluó adoptar campos privados (D-009) y finalmente se descartó: se mantienen campos públicos (ver D-011).
 
 ---
 
@@ -386,7 +386,7 @@ function f({ nombre, precio } = {}) { }    // también en parámetros; "= {}" es
 - Sin el `= {}`, llamar sin argumentos da un `TypeError` confuso al desestructurar `undefined`.
 - Se ve en todos lados en React: `function Entrada({ titulo, precio })`.
 
-## Campos y métodos privados (`#`) y getters
+## Campos y métodos privados (`#`) y getters (concepto; no se usa en el TP, ver D-011)
 
 ```js
 export class TipoEntrada {
