@@ -64,3 +64,15 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 - **Motivo:** React Native/Expo espera ser un proyecto con su propio `package.json`; las dependencias de ambos
   mundos no se mezclan; los workspaces con React Native tienen problemas conocidos de resolución de dependencias.
   La carpeta contenedora no aporta con solo dos proyectos: el repo ya cumple ese rol.
+
+---
+
+## D-006: Organización del Back-End por capas dentro de `src/`
+
+- **Fecha:** 2026-10-27
+- **Contexto:** Express no impone estructura de carpetas; hay que decidirla.
+- **Alternativas:** (a) por capa técnica (`domain/`, `routes/`, `controllers/`, `services/`, `repositories/`);
+  (b) por funcionalidad (`eventos/`, `compras/`, cada una con su ruta, controller y servicio).
+- **Decisión:** (a), todo dentro de `backend/src/`. Las carpetas se crean a medida que se necesitan.
+- **Motivo:** Es la organización conocida de Spring Boot, lo que facilita relacionar cada pieza con lo que ya se sabe.
+  El código de la aplicación vive en `src/`; en la raíz de `backend/` quedan solo archivos de configuración.
