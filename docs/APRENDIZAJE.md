@@ -20,6 +20,7 @@ la explicación o analogía que terminó de aclararlo.
 - [Validar valores: falsy](#validar-valores-la-trampa-de-los-falsy)
 - [Destructuring de objetos](#destructuring-de-objetos)
 - [Campos privados y getters](#campos-y-métodos-privados--y-getters)
+- [Orden del archivo: hoisting y guard clauses](#orden-del-archivo-hoisting-y-guard-clauses)
 
 ---
 
@@ -406,3 +407,25 @@ export class TipoEntrada {
 - **Honestidad sobre "lo que se usa en la industria":** son estándar del lenguaje, pero no la práctica dominante en
   JavaScript (es común dejar campos públicos, o usar TypeScript con `private`). Se eligió por garantizar que la
   entidad no quede inválida (D-009), no por ser "la" forma estándar.
+
+---
+
+## Orden del archivo: hoisting y guard clauses
+
+**Hoisting:** las funciones declaradas con `function nombre() {}` están disponibles en todo el archivo, incluso
+antes de la línea donde se definen. Por eso se puede escribir **la clase primero y los helpers debajo**: al abrir el
+archivo lo primero que se ve es la clase.
+(Una `const f = () => {}` no se comporta igual: no existe hasta que se ejecuta su línea.)
+
+**Guard clauses:** para validar, un `if` plano por regla, cada uno con su `throw`, es más legible que una condición
+gigante con muchos `||`. Lo que daña la lectura son los `if` anidados, no una lista de `if` planos.
+```js
+if (!esTextoNoVacio(nombre)) {
+    throw new Error('El nombre es obligatorio');
+}
+if (!Number.isFinite(precio) || precio < 0) {
+    throw new Error('El precio debe ser un numero mayor o igual a 0');
+}
+```
+Una sola condición por campo y un mensaje por campo. Se lanza el primer error encontrado (no se acumulan: YAGNI).
+Un helper que no usa `this` va como función del módulo sin `export`: lo que no se exporta es privado del archivo.
