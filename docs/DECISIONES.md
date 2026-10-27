@@ -76,3 +76,16 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 - **Decisión:** (a), todo dentro de `backend/src/`. Las carpetas se crean a medida que se necesitan.
 - **Motivo:** Es la organización conocida de Spring Boot, lo que facilita relacionar cada pieza con lo que ya se sabe.
   El código de la aplicación vive en `src/`; en la raíz de `backend/` quedan solo archivos de configuración.
+
+---
+
+## D-007: Las entidades de dominio validan sus propios datos en el constructor
+
+- **Fecha:** 2026-10-27
+- **Contexto:** JavaScript no chequea tipos (D-002), y una entidad puede crearse con datos inválidos desde cualquier lado.
+- **Alternativas:** (a) validar solo en los controllers; (b) validar en el constructor de la entidad de dominio.
+- **Decisión:** (b). La entidad lanza `Error` si los datos son inválidos y el controller lo traduce a un 400.
+- **Motivo:** Una entidad nunca debería existir en estado inválido, sin importar quién la cree. La regla queda en un
+  solo lugar. Contra: el controller debe capturar el error y convertirlo en respuesta HTTP.
+- **Reglas de `TipoEntrada`:** `nombre` y `descripcion` obligatorios; `precio` número finito `>= 0` (0 permite
+  entradas gratuitas); `cupo` entero `>= 0`.
