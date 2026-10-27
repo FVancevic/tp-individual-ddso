@@ -139,7 +139,7 @@ import { TipoEntrada } from "./tipoEntrada.js";
 - **No hay compilación.** JavaScript se interpreta: no existe `mvn compile` ni `.class`. Se ejecuta directo con `node archivo.js`.
 - **No hay ciclo de vida ni fases** (`compile`, `test`, `package`). `npm` solo ejecuta los scripts que vos definas.
 - **Express no tiene inyección de dependencias ni anotaciones.** Spring te arma el contexto solo; en Express vos
-  conectás las piezas a mano con `require` y funciones. Es más simple y más explícito.
+  conectás las piezas a mano con `import` y funciones. Es más simple y más explícito.
 - Los controllers/services/repositories de Spring existen acá como **convención de carpetas**, no como framework.
 
 ---
