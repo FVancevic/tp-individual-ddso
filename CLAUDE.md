@@ -37,3 +37,9 @@ pueda **explicar y defender cada decisión** en un video de entrega (5-10 min). 
 Conoce bastante **Java con Spring Boot**. Usar ese paralelismo (Maven, `pom.xml`, `@RestController`,
 controller/service/repository, JPA, etc.) para explicar conceptos nuevos de Node/Express/React cuando
 ayude, y marcar las diferencias donde la analogía se rompe.
+
+## Ramas y git
+
+- Trabajar y commitear en `develop`. `main` solo recibe merges de `develop` cuando el usuario lo pide (hito terminado,
+  tests pasando). Ver D-013.
+- Hacer `push` solo cuando el usuario lo pida.
