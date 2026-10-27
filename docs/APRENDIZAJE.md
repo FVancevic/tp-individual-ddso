@@ -15,6 +15,7 @@ la explicación o analogía que terminó de aclararlo.
 - [Node y Express: observaciones](#node-y-express-observaciones)
 - [Anatomía de package.json](#anatomía-de-packagejson)
 - [Qué pasa al hacer npm install express](#qué-pasa-al-hacer-npm-install-express)
+- [Primer servidor Express](#primer-servidor-express-backendsrcindexjs)
 
 ---
 
@@ -229,3 +230,48 @@ Las versiones son `MAYOR.MENOR.PARCHE`. El `^` acepta cualquier versión más nu
 ### Dependencias transitivas
 Express declara 28 dependencias directas, y estas a su vez dependen de otras: `node_modules/` terminó con 65
 carpetas. No hay que conocerlas. **Paralelo Java:** igual que las dependencias transitivas de Maven al agregar un starter de Spring.
+
+---
+
+## Primer servidor Express (`backend/src/index.js`)
+
+```js
+import express from "express";            // "express" sin "./" => se busca en node_modules/
+
+const app = express();                    // crea el objeto de la aplicación (no arranca nada)
+const PUERTO = 3000;
+
+app.get("/salud", (req, res) => {         // registra una ruta GET (≈ @GetMapping("/salud"))
+  res.json({ estado: "ok" });             // escribe la respuesta
+});
+
+app.listen(PUERTO, () => {                // recién acá arranca el servidor
+  console.log(`Servidor escuchando en http://localhost:${PUERTO}`);
+});
+```
+Se ejecuta con `node src/index.js` y se prueba en `http://localhost:3000/salud`.
+
+| Línea | Qué hace | Paralelo Spring |
+|---|---|---|
+| `import express from "express"` | Importa la librería. Sin `./` busca en `node_modules/`; con `./` es un archivo propio. | `import` + classpath |
+| `express()` | Crea la app donde se registran rutas y middlewares. No arranca el servidor. | Configurar el `DispatcherServlet` |
+| `app.get(ruta, handler)` | Registra un endpoint GET. | `@GetMapping` |
+| `app.listen(puerto, cb)` | Arranca el servidor; el callback corre cuando ya está escuchando. | `SpringApplication.run` |
+
+### `req` y `res`
+- `req`: lo que llega (headers, params, query; el body solo se lee con el middleware `express.json()`).
+- `res`: **el objeto con el que se escribe la respuesta**.
+
+> **Lo que me hizo clic:** en Spring el método **devuelve** un `ResponseEntity`. En Express el handler **no devuelve
+> nada**: recibe `res` y lo **usa** (`res.status(404).json(...)`). Por eso `res` es un parámetro. Si el handler
+> nunca llama a un método de `res`, la petición queda colgada.
+
+### `Cannot GET /`
+Es el 404 por defecto de Express: pedí una ruta que no está registrada (`/` en vez de `/salud`). No es un error del código.
+
+### Qué pasa al cerrar el proceso
+El servidor se detiene y, como la persistencia es **en memoria**, se pierden todos los datos. Es lo esperado en este TP.
+
+### Capas previstas
+`routes → controller → service → repositorio en memoria`. El "router principal" es la propia `app`; cada
+`express.Router()` se monta con `app.use("/eventos", router)`. Se arma cuando haya más de un endpoint.
