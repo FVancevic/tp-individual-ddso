@@ -1,0 +1,12 @@
+{
+  "name": "ai-ticket-it-backend",
+  "version": "1.0.0",
+  "description": "Backend de AI Ticket It",
+  "license": "ISC",
+  "author": "Felipe Vancevic",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
