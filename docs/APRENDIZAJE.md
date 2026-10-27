@@ -141,3 +141,54 @@ import { TipoEntrada } from "./tipoEntrada.js";
 - **Express no tiene inyección de dependencias ni anotaciones.** Spring te arma el contexto solo; en Express vos
   conectás las piezas a mano con `require` y funciones. Es más simple y más explícito.
 - Los controllers/services/repositories de Spring existen acá como **convención de carpetas**, no como framework.
+
+---
+
+## Comandos de npm
+
+| Comando | Qué hace | Paralelo Java |
+|---|---|---|
+| `npm init` | Crea **solo el archivo `package.json`**, haciéndote preguntas (nombre, versión, etc.). **No** arma carpetas ni código. | Crear el `pom.xml` a mano; no es un Spring Initializr. |
+| `npm init -y` | Igual, pero acepta todos los valores por defecto sin preguntar. | |
+| `npm install` | Lee `package.json` y descarga **todas** las dependencias a `node_modules/`. Se usa al clonar un proyecto. | `mvn install` / refrescar dependencias |
+| `npm install express` | Descarga Express, la agrega a `"dependencies"` en `package.json` y actualiza `package-lock.json`. | Agregar un `<dependency>` y refrescar |
+| `npm install -D nodemon` | Igual, pero la deja en `"devDependencies"`: solo sirve para desarrollar, no para producción. | `<scope>test</scope>` (parecido) |
+| `npm uninstall express` | Quita la dependencia. | Borrar el `<dependency>` |
+| `npm start` | Ejecuta el script `"start"` de `package.json`. | `mvn spring-boot:run` |
+| `npm run dev` | Ejecuta cualquier script propio (acá `dev`). `start` es un atajo; el resto necesita `run`. | |
+| `npx algo` | Ejecuta un programa de npm sin instalarlo de forma permanente. | |
+
+**Qué es `npm init` en una línea:** sirve para que el proyecto "exista" para npm. A partir de ahí el `package.json`
+es el lugar donde se anota todo lo demás. La estructura de carpetas la armamos nosotros.
+
+---
+
+## Node y Express: observaciones
+
+### ¿JavaScript es interpretado?
+**Sí, en esencia.** No hay un paso de compilación previo y el código se traduce al ejecutarse. Matiz: el motor de Node
+(**V8**) usa compilación **JIT**: mientras corre, convierte las partes más usadas a código máquina para ir más rápido.
+Es parecido a lo que hace la JVM con el JIT, pero sin el paso intermedio de bytecode (`.class`).
+
+### ¿Express es un framework?
+**Sí, pero minimalista** (a veces se lo llama micro-framework). Resuelve lo esencial: rutas, request/response y
+middlewares. **No impone estructura de carpetas ni capas**; esa organización la decidimos nosotros.
+Es lo opuesto a Spring Boot, que es "opinionado" (convención sobre configuración).
+
+### ¿Ayuda a entender qué hace Spring por detrás?
+**Sí, bastante.** Spring MVC hace lo mismo que Express, pero te lo esconde detrás de anotaciones y autoconfiguración:
+
+| Spring | Express |
+|---|---|
+| Tomcat embebido | El servidor HTTP de Node: `app.listen(puerto)` |
+| `DispatcherServlet` + `@GetMapping("/eventos")` | `app.get("/eventos", handler)` |
+| `Filter` / `HandlerInterceptor` | **Middleware** (`app.use(...)`): función que se ejecuta antes del handler |
+| `@RequestBody` + Jackson | El middleware `express.json()` |
+| `ResponseEntity.status(404).body(x)` | `res.status(404).json(x)` |
+| `@ControllerAdvice` / `@ExceptionHandler` | Middleware de manejo de errores |
+| `@Autowired` (inyección) | Pasar las dependencias a mano (parámetros o `import`) |
+
+### ¿`.env` es como `application.properties`?
+**Casi.** Cumple el mismo rol (configuración fuera del código: puertos, claves), pero son **variables de entorno**
+que se leen con `process.env.PUERTO`. Se mantiene fuera de git (por eso está en el `.gitignore`).
+Para este TP lo más probable es que casi no lo necesitemos (no hay base de datos ni claves externas).
