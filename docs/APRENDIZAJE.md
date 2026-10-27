@@ -275,3 +275,38 @@ El servidor se detiene y, como la persistencia es **en memoria**, se pierden tod
 ### Capas previstas
 `routes → controller → service → repositorio en memoria`. El "router principal" es la propia `app`; cada
 `express.Router()` se monta con `app.use("/eventos", router)`. Se arma cuando haya más de un endpoint.
+
+### Repreguntas sobre el primer servidor
+
+**¿Qué hay en `node_modules/` hoy?**
+Express y todas sus dependencias transitivas (65 carpetas en total). Al instalar más paquetes se suman a la misma
+carpeta, con las dependencias compartidas una sola vez. No hace falta saber qué carpeta es de quién: lo registran
+`package.json` y `package-lock.json`.
+
+**¿Qué significa el primer `express` de `import express from "express"`?**
+Es un **nombre local que se elige** (una variable). El segundo, entre comillas, es el **nombre del paquete** que se
+busca en `node_modules`. Se podría escribir `import e from "express"`.
+- Sin llaves: import del export **por defecto** del módulo.
+- Con llaves (`import { TipoEntrada } from ...`): import de un export **con nombre**.
+- Diferencia con Java: el `import` de Java trae la clase con su nombre fijo; acá se elige cómo llamarla.
+
+**¿Qué devuelve `express()`?**
+El objeto `app`, que ya trae los métodos `get`, `post`, `use`, `listen`, etc.
+
+**¿Llamar a `res.json()` es como devolver el `ResponseEntity`?**
+Sí en el efecto: ahí se envía la respuesta. Cambia el mecanismo:
+- **Spring:** el método devuelve un valor y el framework lo envía.
+- **Express:** el framework **ignora lo que devuelve el handler**; la respuesta sale cuando se llama a un método de `res`.
+
+> **Lo que me hizo clic:** llamar a un método de `res` es el equivalente al `return new ResponseEntity(...)`, pero
+> es **una acción** (se envía en ese momento), no un valor devuelto.
+
+**Trampa: `res.json()` no corta la función.**
+A diferencia del `return` de Java, el código siguiente se sigue ejecutando; si se vuelve a responder, falla con
+`Cannot set headers after they are sent`. Para salir antes (validaciones) se usa:
+```js
+if (!nombre) {
+  return res.status(400).json({ error: "El nombre es obligatorio" });
+}
+```
+El `return` corta la función; su valor se ignora.
