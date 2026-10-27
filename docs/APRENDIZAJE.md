@@ -16,6 +16,7 @@ la explicación o analogía que terminó de aclararlo.
 - [Anatomía de package.json](#anatomía-de-packagejson)
 - [Qué pasa al hacer npm install express](#qué-pasa-al-hacer-npm-install-express)
 - [Primer servidor Express](#primer-servidor-express-backendsrcindexjs)
+- [Cómo responde el servidor a un request HTTP](#cómo-responde-el-servidor-a-un-request-http)
 
 ---
 
@@ -310,3 +311,26 @@ if (!nombre) {
 }
 ```
 El `return` corta la función; su valor se ignora.
+
+---
+
+## Cómo responde el servidor a un request HTTP
+
+**¿El servidor necesita conocer la dirección del cliente para responder?** No.
+
+1. El cliente abre una **conexión** con el servidor y envía el request por ella.
+2. El servidor recibe el request **junto con esa conexión**.
+3. Para responder escribe **en esa misma conexión**; el cliente la está esperando.
+
+- `res` es el acceso a esa conexión abierta. Por eso, si el handler nunca llama a un método de `res`, el cliente
+  queda esperando hasta el timeout.
+- **Spring hace lo mismo** por debajo (`HttpServletResponse`). Al devolver un `ResponseEntity`, Spring lo escribe
+  en la conexión por vos; en Express lo hacés vos.
+- El servidor puede ver la IP del cliente (`req.ip`) pero es solo informativa, no se usa para responder.
+
+> **Lo que me hizo clic:** el cliente "queda conectado a un área" esperando; el servidor carga la respuesta en esa
+> misma conexión. No hay ninguna llamada de vuelta al cliente.
+
+### Consecuencia: el servidor no puede iniciar la comunicación
+Solo puede responder a lo que el cliente pidió. Para el chat de una compra, la app tendrá que **consultar**
+si hay mensajes nuevos (polling o al abrir la pantalla). Decisión de diseño pendiente para ese caso de uso.
