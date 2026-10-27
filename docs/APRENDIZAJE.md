@@ -10,6 +10,7 @@ la explicación o analogía que terminó de aclararlo.
 
 - [Mapa general: qué es cada pieza](#mapa-general-qué-es-cada-pieza)
 - [JavaScript 1: lo mínimo para leer código](#javascript-1-lo-mínimo-para-leer-código)
+- [npm vs Maven (paralelismo con Java)](#npm-vs-maven-paralelismo-con-java)
 
 ---
 
@@ -100,3 +101,28 @@ const TipoEntrada = require("./tipoEntrada");
 ```
 > Existe otra sintaxis, `import`/`export` (ES Modules), que es la que usa React Native. La vamos a ver
 > cuando lleguemos al Front-End; no hace falta ahora.
+
+---
+
+## npm vs Maven (paralelismo con Java)
+
+**Sí: npm cumple el rol de Maven.** Es el gestor de dependencias y de tareas del proyecto.
+
+| Java / Spring Boot | Node / JavaScript | Comentario |
+|---|---|---|
+| Maven (`mvn`) | **npm** (`npm`) | Descarga dependencias y ejecuta tareas. |
+| `pom.xml` | **`package.json`** | Describe el proyecto: nombre, dependencias, scripts. |
+| Maven Central | **npm registry** | Repositorio público de librerías. |
+| `<dependency>` en el pom | `"dependencies"` en `package.json` | `npm install express` la agrega sola. |
+| `~/.m2` (caché global) | **`node_modules/`** | Acá es **por proyecto**: cada proyecto tiene sus propias copias. Por eso va en `.gitignore`. |
+| Versiones fijas en el pom | **`package-lock.json`** | Congela las versiones exactas instaladas. Sí se commitea. |
+| `mvn spring-boot:run` | `npm start` | Los comandos se definen en `"scripts"` de `package.json`. |
+| Spring Web (`@RestController`) | **Express** | Misma función (exponer endpoints HTTP), pero mucho más liviano. |
+| JVM | **Node.js** | El runtime que ejecuta el código. |
+
+**Diferencias a tener en cuenta**
+- **No hay compilación.** JavaScript se interpreta: no existe `mvn compile` ni `.class`. Se ejecuta directo con `node archivo.js`.
+- **No hay ciclo de vida ni fases** (`compile`, `test`, `package`). `npm` solo ejecuta los scripts que vos definas.
+- **Express no tiene inyección de dependencias ni anotaciones.** Spring te arma el contexto solo; en Express vos
+  conectás las piezas a mano con `require` y funciones. Es más simple y más explícito.
+- Los controllers/services/repositories de Spring existen acá como **convención de carpetas**, no como framework.
