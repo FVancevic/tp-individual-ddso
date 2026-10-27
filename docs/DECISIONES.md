@@ -51,3 +51,16 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 - **Decisión:** ES Modules, con `"type": "module"` en el `package.json` del Back-End.
 - **Motivo:** Es el estándar actual de JavaScript, es la sintaxis que se usa en la cátedra, se parece al `import` de Java y es la misma que
   usa React Native, así que se aprende una sola vez. Costo: hay que escribir la extensión `.js` en los imports.
+
+---
+
+## D-005: Estructura plana con `backend/` y `frontend/` en la raíz
+
+- **Fecha:** 2026-10-27
+- **Contexto:** El repo tendrá dos aplicaciones Node distintas: el servidor (Express) y la app mobile (React Native).
+- **Alternativas:** (a) un único `package.json` común; (b) npm workspaces con `package.json` en la raíz; (c) dos
+  proyectos independientes dentro de una carpeta contenedora (`apps/`); (d) dos proyectos independientes en la raíz.
+- **Decisión:** (d): `backend/` y `frontend/` como carpetas hermanas, cada una con su propio `package.json`, junto a `docs/`.
+- **Motivo:** React Native/Expo espera ser un proyecto con su propio `package.json`; las dependencias de ambos
+  mundos no se mezclan; los workspaces con React Native tienen problemas conocidos de resolución de dependencias.
+  La carpeta contenedora no aporta con solo dos proyectos: el repo ya cumple ese rol.
