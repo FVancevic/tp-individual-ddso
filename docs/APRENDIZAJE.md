@@ -11,6 +11,8 @@ la explicación o analogía que terminó de aclararlo.
 - [Mapa general: qué es cada pieza](#mapa-general-qué-es-cada-pieza)
 - [JavaScript 1: lo mínimo para leer código](#javascript-1-lo-mínimo-para-leer-código)
 - [npm vs Maven (paralelismo con Java)](#npm-vs-maven-paralelismo-con-java)
+- [Comandos de npm](#comandos-de-npm)
+- [Node y Express: observaciones](#node-y-express-observaciones)
 
 ---
 
@@ -41,8 +43,10 @@ let cupo = 100;                      // sí se puede reasignar
 cupo = cupo - 2;
 ```
 - Usamos `const` por defecto y `let` solo si el valor va a cambiar. Evitamos `var` (es la forma vieja).
-- `const` no hace el valor inmutable: un array o un objeto `const` igual se puede modificar por dentro;
-  lo que no se puede es apuntar la variable a otra cosa.
+- `const` **nunca** permite reasignar la variable, sea cual sea el tipo de dato. Lo que cambia es qué pasa
+  con el contenido: un número, string o boolean es inmutable por naturaleza, pero un array u objeto `const`
+  se puede modificar por dentro (`lista.push(x)`, `obj.cupo = 5`).
+  - **Paralelo Java:** es exactamente `final`. Un `final List` no se puede reasignar, pero sí hacerle `add`.
 - No se declara el tipo: JavaScript es de **tipado dinámico**.
 
 ### Tipos básicos
@@ -55,6 +59,13 @@ function hayCupoPara(cantidad) { return cantidad <= cupo; }   // tradicional
 const hayCupoPara = (cantidad) => cantidad <= cupo;           // flecha (arrow function)
 ```
 Hacen lo mismo en lo básico. Las flecha son muy comunes en callbacks y en React.
+
+> **Observación:** no es una regla por capa, es una convención de estilo. La diferencia real entre ambas es
+> el valor de `this`: la flecha **no tiene `this` propio**, la tradicional sí. Por eso:
+> - En **callbacks y handlers** (controllers, `filter`, `map`) se usan flechas: no necesitan `this`.
+> - En **clases de dominio** los métodos se escriben con la sintaxis de método (`hayCupoPara(c) { ... }`, sin
+>   la palabra `function` ni flecha), que sí tiene `this` y apunta al objeto. No es "función tradicional"
+>   estrictamente, pero se parece más a ella.
 
 ### Objetos y arrays
 ```js
@@ -90,17 +101,21 @@ Muy parecido a otros lenguajes con clases. `this` es el objeto sobre el que se l
 En el constructor **se crean las propiedades**: no se declaran arriba como en el diagrama.
 
 ### Módulos (separar el código en archivos)
-Node usa **CommonJS** por defecto: `module.exports` para exportar y `require` para importar.
+Usamos **ES Modules** (`import` / `export`), que es la sintaxis moderna y la misma que usa React Native
+(ver decisión D-004).
 ```js
 // tipoEntrada.js
-class TipoEntrada { /* ... */ }
-module.exports = TipoEntrada;
+export class TipoEntrada { /* ... */ }
 
 // otro.js
-const TipoEntrada = require("./tipoEntrada");
+import { TipoEntrada } from "./tipoEntrada.js";
 ```
-> Existe otra sintaxis, `import`/`export` (ES Modules), que es la que usa React Native. La vamos a ver
-> cuando lleguemos al Front-End; no hace falta ahora.
+- **Paralelo Java:** `import` equivale al `import` de Java, pero apunta a un **archivo** (ruta relativa), no a un paquete.
+- En Node hay que activarlo con `"type": "module"` en el `package.json`.
+- En imports de archivos propios **hay que escribir la extensión** (`.js`). Olvidarla es un error típico.
+- `export` nombrado (`export class X` + `import { X }`) vs `export default`: preferimos el nombrado, porque
+  el nombre queda fijo en todos los archivos.
+- En tutoriales viejos vas a ver `require` / `module.exports` (CommonJS). Es lo mismo en otra sintaxis; no lo usamos.
 
 ---
 
