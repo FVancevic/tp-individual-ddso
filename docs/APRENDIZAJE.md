@@ -367,3 +367,5 @@ Una clase sin `export` solo se usa dentro de su archivo (como una clase Java sin
 - **Limitación conocida de JavaScript:** los campos son públicos; `entrada.precio = -5` desde afuera funciona y
   salta la validación del constructor. Se evitaría con campos privados `#` y getters, pero queda fuera de alcance
   (KISS). Es una convención del equipo no mutar campos directamente.
+
+> **Actualización:** la limitación de campos públicos fue revertida: se adoptan campos privados con getters (ver D-009).
