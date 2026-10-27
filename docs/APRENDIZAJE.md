@@ -17,6 +17,7 @@ la explicación o analogía que terminó de aclararlo.
 - [Qué pasa al hacer npm install express](#qué-pasa-al-hacer-npm-install-express)
 - [Primer servidor Express](#primer-servidor-express-backendsrcindexjs)
 - [Cómo responde el servidor a un request HTTP](#cómo-responde-el-servidor-a-un-request-http)
+- [Validar valores: falsy](#validar-valores-la-trampa-de-los-falsy)
 
 ---
 
@@ -334,3 +335,22 @@ El `return` corta la función; su valor se ignora.
 ### Consecuencia: el servidor no puede iniciar la comunicación
 Solo puede responder a lo que el cliente pidió. Para el chat de una compra, la app tendrá que **consultar**
 si hay mensajes nuevos (polling o al abrir la pantalla). Decisión de diseño pendiente para ese caso de uso.
+
+---
+
+## Validar valores: la trampa de los "falsy"
+
+En JavaScript, `!x` es `true` cuando `x` es **falsy**: `0`, `""`, `null`, `undefined`, `NaN` y `false`.
+Por eso `if (!precio)` no significa "falta el precio": también salta si el precio es `0`.
+
+```js
+if (!precio) { ... }                         // MAL para números: rechaza 0
+if (typeof precio !== "number") { ... }      // chequea el tipo
+if (precio === undefined || precio === null) // chequea que exista, aceptando 0
+if (Number.isInteger(cupo)) { ... }          // es un entero
+```
+JavaScript **no chequea tipos**, así que un `precio = "abc"` o `-500` pasa sin quejarse: hay que validarlo a mano.
+Esto compensa la decisión D-002 de no usar TypeScript.
+
+### `export`: lo que no se exporta es privado
+Una clase sin `export` solo se usa dentro de su archivo (como una clase Java sin `public`).
