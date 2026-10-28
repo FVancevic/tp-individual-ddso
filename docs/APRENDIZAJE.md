@@ -30,6 +30,7 @@ la explicación o analogía que terminó de aclararlo.
 - [Importaciones circulares](#importaciones-circulares-entre-módulos)
 - [Rest parameters y spread](#rest-parameters-y-spread-)
 - [Cómo se resuelve una importación circular](#cómo-se-resuelve-una-importación-circular-por-qué-no-es-un-bucle)
+- [Validar tipos en runtime: JavaScript vs Java](#validar-tipos-en-runtime-javascript-vs-java)
 
 ---
 
@@ -588,3 +589,24 @@ todavía vacía. Ambos terminan de cargarse y, cuando un constructor corre despu
 
 > **Lo que me hizo clic:** no hay bucle porque un módulo ya "en proceso" no se vuelve a cargar; solo es un problema si se
 > usa la clase importada **al cargar el archivo** (por ejemplo `extends`) y no dentro de un constructor.
+
+---
+
+## Validar tipos en runtime: JavaScript vs Java
+
+- **Java** chequea los tipos **al compilar**: pasar un tipo equivocado al constructor ni compila.
+- **JavaScript** no tiene tipos declarados ni compilación: la única oportunidad es **al ejecutar**, validando a mano.
+  Es una práctica real y corriente (equivale a `@NotBlank`, `@Min` de Bean Validation en Spring).
+- Con **TypeScript** los tipos también desaparecen al ejecutar: lo que viene de afuera (HTTP) igual se valida en
+  runtime. Por eso existen librerías como Zod (ver D-015).
+- **Nivel de desconfianza:** chequear con `instanceof` cada colaborador (`categoria instanceof Categoria`) es la
+  versión estricta. Muchos proyectos validan fuerte en los bordes y el dominio confía más. Acá se eligió la estricta
+  (D-002, D-007): es barata y detecta errores de armado enseguida. Costo: cada validación necesita su test.
+
+### Trampas al validar datos compuestos
+- `[].every(cond)` devuelve **`true`** con un arreglo vacío (no hay ningún elemento que falle). Para exigir "al menos
+  uno" hay que sumar `arreglo.length > 0`.
+- `new Date('abc')` **no lanza error**: devuelve un `Date` inválido que sí cumple `instanceof Date`. Se detecta con
+  `Number.isNaN(fecha.getTime())`.
+- Usar una clase en una validación sin importarla da `ReferenceError` recién al ejecutar esa línea (no al cargar el
+  archivo), por eso conviene un test por cada rama.
