@@ -243,3 +243,19 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
   reasignar `evento.fecha` (los campos son públicos, D-011) o fijar el reloj en el test. No afecta a producción.
 - **Tests:** las fechas de los tests son relativas a `Date.now()` (una fecha fija se vuelve pasada con el tiempo y
   rompería los tests sin tocar el código).
+
+---
+
+## D-019: No se agregan métodos de edición a `Evento` hasta que un caso de uso los requiera
+
+- **Fecha:** 2026-10-28
+- **Contexto:** Un organizador podría querer agregar tipos de entrada o multimedia a un evento ya creado, pero ningún
+  caso de uso listado en el enunciado edita eventos; todos los datos se cargan al crear.
+- **Alternativas:** (a) agregar ya `agregarTipoEntrada` y `agregarMultimedia`; (b) esperar al caso de uso (YAGNI).
+- **Decisión:** (b).
+- **Motivo:** Evita código sin uso ni tests. Cuando aparezca, se agrega como método de negocio que valida (no un `push`
+  suelto) y se decide la regla pendiente: si pueden existir dos tipos de entrada con el mismo nombre. Para editar
+  campos simples se evalúa un único método `actualizar(cambios)` que reutilice `validarParametros`.
+- **Costo conocido (D-011):** al ser públicos los campos, nada impide `evento.tiposEntrada.push({})` o
+  `evento.nombre = ''` desde afuera; se sostiene por convención de usar los métodos de la entidad.
+- **Mutación ya prevista:** `TipoEntrada.descontarCupo(cantidad)` al comprar (y su inverso al cancelar), en `Compra`.
