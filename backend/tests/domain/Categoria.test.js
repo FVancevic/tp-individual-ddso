@@ -6,7 +6,7 @@ function crearCategoria(overrides = {}) {
         descripcion: 'Eventos de música en vivo',
         ...overrides,
     });
-};
+}
 
 describe('Categoria', () => {
     describe('creación', () => {
