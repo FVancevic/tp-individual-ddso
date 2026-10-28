@@ -23,6 +23,7 @@ la explicación o analogía que terminó de aclararlo.
 - [Orden del archivo: hoisting y guard clauses](#orden-del-archivo-hoisting-y-guard-clauses)
 - [Shorthand de propiedades](#shorthand-de-propiedades--nombre-precio-)
 - [Jest: lo básico](#jest-lo-básico)
+- [Código compartido: módulos de utilidades](#código-compartido-módulos-de-utilidades)
 
 ---
 
@@ -481,3 +482,23 @@ import { TipoEntrada } from "../../src/domain/TipoEntrada.js";
 - Sin llaves = export `default` (el nombre sí se elige): `import express from "express"`.
 - Clases en PascalCase (`TipoEntrada`); variables y funciones en camelCase (`crearTipoEntrada`).
 - Cada `..` en la ruta sube una carpeta: desde `tests/domain/` hacen falta dos para llegar a `backend/`.
+
+---
+
+## Código compartido: módulos de utilidades
+
+Para reutilizar una función en varios archivos se escribe un **módulo** que la exporta y los demás la importan:
+```js
+// src/domain/validaciones.js
+export function esTextoNoVacio(valor) {
+    return typeof valor === 'string' && valor.trim() !== '';
+}
+
+// src/domain/Categoria.js
+import { esTextoNoVacio } from "./validaciones.js";
+```
+- Es la forma estándar en JavaScript. **Paralelo Java:** una clase de utilidades con métodos `static` (`StringUtils`),
+  pero acá no hace falta la clase: las funciones se exportan sueltas.
+- Nombrar el archivo por su **propósito** (`validaciones.js`) y no `utils.js`, para que no se vuelva un cajón de sastre.
+- Regla práctica: una copia se tolera, a la segunda se piensa, a la **tercera se extrae**.
+- No hace falta una librería (`validator`, `zod`) para una función de una línea.
