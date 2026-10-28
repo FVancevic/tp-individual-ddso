@@ -90,6 +90,8 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 - **Reglas de `TipoEntrada`:** `nombre` texto no vacío (ni solo espacios); `descripcion` opcional, pero si viene debe
   ser texto; `precio` número finito `>= 0` (0 permite entradas gratuitas); `cupo` entero `>= 0`. Un mensaje de error
   distinto por campo; se lanza el primero que falle (no se acumulan, por YAGNI).
+- **Mensajes del dominio:** están escritos para quien desarrolla (descriptivos, mencionan el tipo esperado). Los mensajes
+  para el usuario final los arma Zod en el controller (D-015); los del dominio son la red de seguridad.
 
 ---
 
