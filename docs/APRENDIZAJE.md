@@ -25,6 +25,7 @@ la explicación o analogía que terminó de aclararlo.
 - [Jest: lo básico](#jest-lo-básico)
 - [Código compartido: módulos de utilidades](#código-compartido-módulos-de-utilidades)
 - [JavaScript es multiparadigma](#javascript-es-multiparadigma-clases-y-funciones-juntas)
+- [Variables sin declarar: globales implícitas](#variables-sin-declarar-globales-implícitas-y-modo-estricto)
 
 ---
 
@@ -520,3 +521,18 @@ JavaScript no es "todo objetos" como Java: tiene clases, pero las funciones son 
 - Archivo con una **clase** → PascalCase: `TipoEntrada.js`.
 - Archivo con **funciones** → camelCase, nombrado por propósito: `validaciones.js`.
 - Cuidado: Git distingue mayúsculas en los nombres y Windows no; renombrar solo por mayúsculas puede dar problemas.
+
+---
+
+## Variables sin declarar: globales implícitas y modo estricto
+
+```js
+crearCategoria = () => {...};          // MAL: sin const/let. Crea una variable GLOBAL en modo no estricto.
+const crearCategoria = () => {...};    // BIEN
+```
+- Asignar a un nombre que nunca se declaró **no da error** en modo no estricto: crea una variable global.
+- Los **módulos ES** (`import`/`export`) corren en **modo estricto**, donde eso lanza `ReferenceError`.
+- **Jest lo esconde:** en un test el mismo código pasa sin quejarse (comprobado: Node puro da `ReferenceError`, Jest pasa).
+  Moraleja: que un test pase no garantiza que el código sea correcto fuera de Jest.
+- **Paralelo Java:** usar una variable sin declararla es error de compilación; JavaScript no tiene compilación que lo avise.
+- Siempre declarar con `const` (o `let` si se reasigna). Más adelante conviene sumar un linter (ESLint) que lo detecte solo.
