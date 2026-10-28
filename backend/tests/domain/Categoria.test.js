@@ -43,6 +43,5 @@ describe('Categoria', () => {
         test('rechaza una descripción que no es texto', () => {
             expect(() => crearCategoria({ descripcion: 123 })).toThrow('La descripcion debe ser un texto');
         });
-
     });
 });
