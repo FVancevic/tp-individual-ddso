@@ -197,3 +197,16 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
   veces); una dependencia más que aprender.
 - **Mitigación:** el controller también atrapa los errores del dominio y responde 400 (Zod es la primera línea, el
   dominio la red de seguridad), y los tests de integración verifican que ambas capas respondan igual ante un body inválido.
+
+---
+
+## D-016: Los favoritos no se reciben en el constructor de `Usuario`; se agregan con un método
+
+- **Fecha:** 2026-10-28
+- **Contexto:** `Usuario` tenía `favoritos` como parámetro del constructor. Un usuario nuevo siempre arranca sin favoritos.
+- **Alternativas:** (a) recibir `favoritos` y copiarlos (`[...favoritos]`) para no compartir la referencia; (b) no
+  recibirlos: el constructor crea `[]` y se agregan con `agregarFavorito(evento)`.
+- **Decisión:** (b). `agregarFavorito` valida `evento instanceof Evento` y evita duplicados; se escribe junto con `Evento`.
+- **Motivo:** Es más simple (YAGNI), elimina el problema de compartir un arreglo entre usuarios y resuelve dónde validar
+  que sean eventos (al agregar). Costo: `Usuario` y `Evento` se importan mutuamente (viable, ver apuntes sobre
+  importaciones circulares). Los usuarios de la demo se arman con `agregarFavorito` después de crearlos.
