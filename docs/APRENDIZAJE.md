@@ -24,6 +24,7 @@ la explicación o analogía que terminó de aclararlo.
 - [Shorthand de propiedades](#shorthand-de-propiedades--nombre-precio-)
 - [Jest: lo básico](#jest-lo-básico)
 - [Código compartido: módulos de utilidades](#código-compartido-módulos-de-utilidades)
+- [JavaScript es multiparadigma](#javascript-es-multiparadigma-clases-y-funciones-juntas)
 
 ---
 
@@ -502,3 +503,20 @@ import { esTextoNoVacio } from "./validaciones.js";
 - Nombrar el archivo por su **propósito** (`validaciones.js`) y no `utils.js`, para que no se vuelva un cajón de sastre.
 - Regla práctica: una copia se tolera, a la segunda se piensa, a la **tercera se extrae**.
 - No hace falta una librería (`validator`, `zod`) para una función de una línea.
+
+---
+
+## JavaScript es multiparadigma: clases y funciones juntas
+
+JavaScript no es "todo objetos" como Java: tiene clases, pero las funciones son valores sueltos. Lo idiomático es combinarlas:
+- **Clases** para las **entidades de dominio**, que tienen estado y comportamiento juntos (`TipoEntrada` con su `cupo`
+  y `hayCupoPara`). Es lo que modela el diagrama de clases del enunciado.
+- **Funciones sueltas** para lo que **no tiene estado**: validar un texto, calcular días restantes, formatear.
+  Meterlas en una clase solo por "orientación a objetos" agrega ceremonia sin beneficio.
+- **Paralelo Java:** una clase `StringUtils` con métodos `static` es solo un contenedor. En JavaScript el contenedor
+  es el **archivo** (módulo).
+
+### Convención de nombres de archivo
+- Archivo con una **clase** → PascalCase: `TipoEntrada.js`.
+- Archivo con **funciones** → camelCase, nombrado por propósito: `validaciones.js`.
+- Cuidado: Git distingue mayúsculas en los nombres y Windows no; renombrar solo por mayúsculas puede dar problemas.
