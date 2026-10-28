@@ -26,6 +26,8 @@ la explicación o analogía que terminó de aclararlo.
 - [Código compartido: módulos de utilidades](#código-compartido-módulos-de-utilidades)
 - [JavaScript es multiparadigma](#javascript-es-multiparadigma-clases-y-funciones-juntas)
 - [Variables sin declarar: globales implícitas](#variables-sin-declarar-globales-implícitas-y-modo-estricto)
+- [Valores por defecto y referencias compartidas](#valores-por-defecto-y-referencias-compartidas)
+- [Importaciones circulares](#importaciones-circulares-entre-módulos)
 
 ---
 
@@ -536,3 +538,26 @@ const crearCategoria = () => {...};    // BIEN
   Moraleja: que un test pase no garantiza que el código sea correcto fuera de Jest.
 - **Paralelo Java:** usar una variable sin declararla es error de compilación; JavaScript no tiene compilación que lo avise.
 - Siempre declarar con `const` (o `let` si se reasigna). Más adelante conviene sumar un linter (ESLint) que lo detecte solo.
+
+---
+
+## Valores por defecto y referencias compartidas
+
+```js
+constructor({ favoritos = [] } = {}) { this.favoritos = favoritos; }
+```
+- **Con el default `[]` NO se comparte el arreglo entre instancias**: JavaScript evalúa el valor por defecto **en cada
+  llamada**. (El problema de "default mutable compartido" es de Python, no de JavaScript.)
+- **Lo que sí se comparte es un arreglo que el llamador pasa:** el constructor guarda la **referencia**. Si dos
+  usuarios reciben la misma lista, modificar una modifica la otra. Se evita copiando: `this.favoritos = [...favoritos]`.
+- **Paralelo Java:** igual que guardar la referencia a una `List` recibida sin hacer `new ArrayList<>(lista)`.
+
+## Importaciones circulares entre módulos
+
+`Usuario` importa `Evento` (para validar favoritos) y `Evento` importa `Usuario` (para validar el organizador).
+- **Funciona** si las clases se usan **dentro de funciones o constructores**, porque corren cuando ambos módulos ya
+  terminaron de cargarse (comprobado con `instanceof`). Falla si se usa una clase **al cargar el archivo**, por ejemplo
+  con `extends`.
+- Aunque funcione, es **acoplamiento mutuo**: dos clases que se conocen entre sí. Alternativa: validar al agregar
+  (`agregarFavorito(evento)`) en el servicio, que ya conoce ambas.
+- **Corrección propia:** antes se había dicho que "suelen dar problemas"; para este caso era exagerado.
