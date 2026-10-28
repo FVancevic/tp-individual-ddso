@@ -169,3 +169,22 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 - **Decisión:** (b). Los commits diarios van a `develop`; `main` recibe merges de `develop` cuando hay un hito
   terminado y con los tests pasando.
 - **Motivo:** `main` siempre queda en un estado presentable (útil para la entrega) y el trabajo en curso no lo rompe.
+
+---
+
+## D-014: Código compartido en `src/utils/`
+
+- **Fecha:** 2026-10-27
+- **Contexto:** `esTextoNoVacio` estaba copiada en `TipoEntrada`, `Categoria` y `Usuario`, y `Evento` la necesitaría también.
+- **Alternativas:** (a) dejar las copias; (b) módulo compartido dentro de `domain/`; (c) módulo en `src/utils/`.
+- **Decisión:** (c): `src/utils/validaciones.js`, nombrado por su propósito. Complementa D-006 (agrega la carpeta `utils/`).
+- **Motivo:** Evita duplicar la regla, es una convención muy difundida y el nombre del archivo evita que se vuelva un
+  cajón de sastre. Las clases de dominio lo importan con `../utils/validaciones.js`.
+
+## D-015: Zod en los controllers (pendiente)
+
+- **Fecha:** 2026-10-27
+- **Estado:** a decidir al escribir el primer controller (`POST /eventos`).
+- **Tensión con D-007:** las entidades ya validan sus datos; Zod en el controller duplicaría esas reglas.
+- **Opciones:** (a) solo validación en el dominio y el controller traduce el error a 400; (b) Zod en el controller y
+  también en el dominio (reglas duplicadas); (c) Zod en lugar de las validaciones del dominio.
