@@ -27,7 +27,7 @@ export class Evento {
 
     tuPrecioEstaEntre(min, max) {
         if (!Number.isFinite(min) || !Number.isFinite(max) || min > max || min < 0 || max < 0) {
-            throw new Error('Los valores min y max deben ser números mayores a cero y min no puede ser mayor que max');
+            throw new Error('Los valores min y max deben ser números mayores o iguales a cero y min no puede ser mayor que max');
         }
         return this.tiposEntrada.some(tipoEntrada => tipoEntrada.precio >= min && tipoEntrada.precio <= max);
     }
