@@ -31,6 +31,7 @@ la explicación o analogía que terminó de aclararlo.
 - [Rest parameters y spread](#rest-parameters-y-spread-)
 - [Cómo se resuelve una importación circular](#cómo-se-resuelve-una-importación-circular-por-qué-no-es-un-bucle)
 - [Validar tipos en runtime: JavaScript vs Java](#validar-tipos-en-runtime-javascript-vs-java)
+- [Cobertura de tests](#cobertura-de-tests---coverage)
 
 ---
 
@@ -610,3 +611,25 @@ todavía vacía. Ambos terminan de cargarse y, cuando un constructor corre despu
   `Number.isNaN(fecha.getTime())`.
 - Usar una clase en una validación sin importarla da `ReferenceError` recién al ejecutar esa línea (no al cargar el
   archivo), por eso conviene un test por cada rama.
+
+---
+
+## Cobertura de tests (`--coverage`)
+
+Jest trae un reporte de qué líneas ejecutan los tests:
+```
+npm test -- --coverage --coverageProvider=v8 --collectCoverageFrom='src/domain/**/*.js'
+```
+- Muestra % de sentencias, ramas y funciones, y las **líneas sin cubrir** (ej. `Evento.js 41-42,63-64`).
+- Genera una carpeta `coverage/` (salida del reporte, va en `.gitignore`).
+- **Paralelo Java:** JaCoCo.
+- `--coverageProvider=v8` hace falta con ES Modules.
+
+### Qué no te dice la cobertura
+- **100% no significa que esté todo probado:** una condición con `||` en una sola línea cuenta como cubierta aunque
+  una de sus mitades nunca se haya probado (ej. `!(fecha instanceof Date) || Number.isNaN(...)`: un string pasa por la
+  primera mitad y la fecha inválida real, la segunda, queda sin probar).
+- **No sabe de las decisiones de diseño:** que una fecha pasada **se acepta** o que `tuPrecioEstaEntre` usa "algún" tipo
+  de entrada (no "todos") solo se documenta con tests que lo afirmen. Para el segundo hace falta un evento con **dos
+  tipos de entrada** cuyos precios queden uno dentro y otro fuera del rango.
+- Sirve para **encontrar huecos**, no para reemplazar el criterio de qué reglas hay que dejar documentadas.
