@@ -192,5 +192,5 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 - **Motivo:** Son validaciones de distinta naturaleza. Zod puede informar **todos** los errores del body de una vez
   (útil para formularios), y el dominio sigue protegiendo la entidad sin importar quién la cree (otro servicio, un test).
   No es una cuestión de rendimiento: validar en el constructor tampoco procesa nada de más.
-- **Costo asumido:** reglas simples (ej. ) quedan escritas en dos lugares y hay que mantenerlas
+- **Costo asumido:** reglas simples (ej. `precio >= 0`) quedan escritas en dos lugares y hay que mantenerlas
   sincronizadas; una dependencia más que aprender. Mitigación: Zod controla sobre todo la forma y el dominio las reglas de negocio.
