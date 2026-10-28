@@ -181,10 +181,16 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 - **Motivo:** Evita duplicar la regla, es una convención muy difundida y el nombre del archivo evita que se vuelva un
   cajón de sastre. Las clases de dominio lo importan con `../utils/validaciones.js`.
 
-## D-015: Zod en los controllers (pendiente)
+## D-015: Zod en los controllers, además de las validaciones del dominio
 
 - **Fecha:** 2026-10-27
-- **Estado:** a decidir al escribir el primer controller (`POST /eventos`).
-- **Tensión con D-007:** las entidades ya validan sus datos; Zod en el controller duplicaría esas reglas.
-- **Opciones:** (a) solo validación en el dominio y el controller traduce el error a 400; (b) Zod en el controller y
-  también en el dominio (reglas duplicadas); (c) Zod en lugar de las validaciones del dominio.
+- **Contexto:** Las entidades ya validan sus datos (D-007). Se evaluó si también validar la entrada HTTP en los controllers.
+- **Alternativas:** (a) solo validación en el dominio y el controller traduce el error a 400; (b) Zod en el controller
+  **y** validación en el dominio; (c) Zod en lugar de las validaciones del dominio.
+- **Decisión:** (b). Zod valida la **forma de la entrada HTTP** (campos presentes, tipos, formato) en el controller; el
+  dominio sigue validando los **invariantes de negocio** de cada entidad. Zod se instala al escribir el primer controller.
+- **Motivo:** Son validaciones de distinta naturaleza. Zod puede informar **todos** los errores del body de una vez
+  (útil para formularios), y el dominio sigue protegiendo la entidad sin importar quién la cree (otro servicio, un test).
+  No es una cuestión de rendimiento: validar en el constructor tampoco procesa nada de más.
+- **Costo asumido:** reglas simples (ej. ) quedan escritas en dos lugares y hay que mantenerlas
+  sincronizadas; una dependencia más que aprender. Mitigación: Zod controla sobre todo la forma y el dominio las reglas de negocio.
