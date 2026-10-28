@@ -32,6 +32,7 @@ la explicación o analogía que terminó de aclararlo.
 - [Cómo se resuelve una importación circular](#cómo-se-resuelve-una-importación-circular-por-qué-no-es-un-bucle)
 - [Validar tipos en runtime: JavaScript vs Java](#validar-tipos-en-runtime-javascript-vs-java)
 - [Cobertura de tests](#cobertura-de-tests---coverage)
+- [Tests que dependen del reloj](#tests-que-dependen-del-reloj)
 
 ---
 
@@ -633,3 +634,14 @@ npm test -- --coverage --coverageProvider=v8 --collectCoverageFrom='src/domain/*
   de entrada (no "todos") solo se documenta con tests que lo afirmen. Para el segundo hace falta un evento con **dos
   tipos de entrada** cuyos precios queden uno dentro y otro fuera del rango.
 - Sirve para **encontrar huecos**, no para reemplazar el criterio de qué reglas hay que dejar documentadas.
+
+---
+
+## Tests que dependen del reloj
+
+Si una regla compara contra "ahora" (`fecha < Date.now()`), una **fecha fija** en los tests es una bomba de tiempo:
+`new Date('2027-01-10')` es futura hoy y pasada el 11 de enero de 2027, y los tests empiezan a fallar solos.
+- Usar fechas **relativas**: `new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)`.
+- Para el caso "pasada", una fecha lejana en el pasado (`new Date('2020-01-01')`) nunca deja de ser pasada.
+- Existe también congelar el reloj con los *fake timers* de Jest, pero no hace falta para este caso.
+- `Date.now()` devuelve milisegundos desde 1970; `fecha.getTime()` también, por eso se pueden comparar con `<`.
