@@ -227,7 +227,7 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 
 ---
 
-## D-018:  rechaza fechas pasadas en el constructor
+## D-018: `Evento` rechaza fechas pasadas en el constructor
 
 - **Fecha:** 2026-10-28
 - **Contexto:** Ningún caso de uso crea un evento con fecha que ya pasó, así que no tiene sentido permitirlo. Distinto
@@ -237,8 +237,9 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
   (b) la entidad rechaza fechas pasadas al construirse.
 - **Decisión:** (b). El constructor valida la fecha **solo en el momento de crear**; no vuelve a chequearla después.
 - **Motivo:** La entidad nunca nace con una fecha inválida para el negocio, sin depender de que el servicio se acuerde.
-  Las reglas que dependen de que el evento ya haya pasado (cancelar, reseñar) comparan  contra   **al usarse**, no al construir, así que no se ven afectadas.
+  Las reglas que dependen de que el evento ya haya pasado (cancelar, reseñar) comparan `fecha` contra `Date.now()`
+  **al usarse**, no al construir, así que no se ven afectadas.
 - **Costo (solo para pruebas y demo):** para probar "evento ya realizado" hay que construir el evento a futuro y
-  reasignar  (los campos son públicos, D-011) o fijar el reloj en el test. No afecta a producción.
-- **Tests:** las fechas de los tests son relativas a  (una fecha fija se vuelve pasada con el tiempo y
+  reasignar `evento.fecha` (los campos son públicos, D-011) o fijar el reloj en el test. No afecta a producción.
+- **Tests:** las fechas de los tests son relativas a `Date.now()` (una fecha fija se vuelve pasada con el tiempo y
   rompería los tests sin tocar el código).
