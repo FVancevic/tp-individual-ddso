@@ -16,7 +16,7 @@ function crearEvento(overrides = {}) {
         nombre: 'Concierto de Rock',
         descripcion: 'Un concierto de rock increíble',
         categoria: new Categoria({ nombre: 'Música' }),
-        fecha: new Date(),
+        fecha: new Date('2027-01-10'),
         ubicacion: 'Teatro Principal',
         tiposEntrada: [
             new TipoEntrada({ nombre: 'General', precio: 50, cupo: 100 }),
@@ -58,6 +58,7 @@ describe('Usuario', () => {
         test('no agrega un evento inválido', () => {
             const usuario = crearUsuario();
             expect(() => usuario.agregarFavorito({})).toThrow('El evento no es válido');
+            expect(usuario.favoritos).toEqual([]);
         });
 
         test('no agrega un evento duplicado', () => {
