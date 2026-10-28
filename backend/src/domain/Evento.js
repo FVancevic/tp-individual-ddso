@@ -25,9 +25,9 @@ export class Evento {
         this.organizador = organizador;
     }
 
-    tuPrecioEstaEntre({ min, max }) {
-        if (typeof min !== 'number' || typeof max !== 'number') {
-            throw new Error('Los valores min y max deben ser números');
+    tuPrecioEstaEntre(min, max) {
+        if (!Number.isFinite(min) || !Number.isFinite(max) || min > max || min < 0 || max < 0) {
+            throw new Error('Los valores min y max deben ser números mayores a cero y min no puede ser mayor que max');
         }
         return this.tiposEntrada.some(tipoEntrada => tipoEntrada.precio >= min && tipoEntrada.precio <= max);
     }
@@ -44,10 +44,10 @@ function validarParametros({ nombre, descripcion, categoria, fecha, ubicacion, t
         throw new Error('La categoria debe ser una instancia de Categoria');
     }
     if (!(fecha instanceof Date) || Number.isNaN(fecha.getTime())) {
-        throw new Error('La fecha debe ser una instancia de Date válida');
+        throw new Error('La fecha debe ser una instancia de Date valida');
     }
     if (!esTextoNoVacio(ubicacion)) {
-        throw new Error('La ubicación del evento es obligatoria y no puede estar vacía');
+        throw new Error('La ubicación del evento es obligatoria y no puede estar vacia');
     }
     if (
         !Array.isArray(tiposEntrada) ||
