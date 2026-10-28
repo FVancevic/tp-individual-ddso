@@ -1,3 +1,5 @@
+import { esTextoNoVacio } from '../utils/validaciones.js';
+
 export class TipoEntrada {
     constructor({ nombre, descripcion, precio, cupo } = {}) {
         validarParametros({ nombre, descripcion, precio, cupo });
@@ -25,8 +27,4 @@ function validarParametros({ nombre, descripcion, precio, cupo }) {
     if (!Number.isInteger(cupo) || cupo < 0) {
         throw new Error('El cupo debe ser un numero entero mayor o igual a 0');
     }
-}
-
-function esTextoNoVacio(valor) {
-    return typeof valor === 'string' && valor.trim() !== '';
 }
