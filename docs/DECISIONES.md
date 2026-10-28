@@ -210,3 +210,15 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 - **Motivo:** Es más simple (YAGNI), elimina el problema de compartir un arreglo entre usuarios y resuelve dónde validar
   que sean eventos (al agregar). Costo: `Usuario` y `Evento` se importan mutuamente (viable, ver apuntes sobre
   importaciones circulares). Los usuarios de la demo se arman con `agregarFavorito` después de crearlos.
+
+---
+
+## D-017: `Evento` incluye `ubicacion`, que no figura en el diagrama del enunciado
+
+- **Fecha:** 2026-10-28
+- **Contexto:** El diagrama tentativo de `Evento` no tiene lugar de realización, pero un evento presencial lo necesita
+  (el enunciado menciona "el acceso al lugar" como motivo de consulta en el chat).
+- **Alternativas:** (a) respetar el diagrama al pie de la letra; (b) agregar `ubicacion`.
+- **Decisión:** (b). `ubicacion` es un texto obligatorio no vacío.
+- **Motivo:** El diagrama es "tentativo"; agregar un campo no rompe ningún caso de uso y hace al modelo más realista.
+  Es una desviación consciente del enunciado y se menciona en el video.
