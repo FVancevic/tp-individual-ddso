@@ -16,7 +16,7 @@ function crearEvento(overrides = {}) {
         nombre: 'Concierto de Rock',
         descripcion: 'Un concierto de rock increíble',
         categoria: new Categoria({ nombre: 'Música' }),
-        fecha: new Date('2027-01-10'),
+        fecha: new Date(Date.now() + 24 * 60 * 60 * 1000),
         ubicacion: 'Teatro Principal',
         tiposEntrada: [
             new TipoEntrada({ nombre: 'General', precio: 50, cupo: 100 }),
