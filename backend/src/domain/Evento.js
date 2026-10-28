@@ -46,6 +46,9 @@ function validarParametros({ nombre, descripcion, categoria, fecha, ubicacion, t
     if (!(fecha instanceof Date) || Number.isNaN(fecha.getTime())) {
         throw new Error('La fecha debe ser una instancia de Date valida');
     }
+    if (fecha.getTime() < Date.now()) {
+        throw new Error('La fecha del evento no puede ser anterior a la fecha actual');
+    }
     if (!esTextoNoVacio(ubicacion)) {
         throw new Error('La ubicación del evento es obligatoria y no puede estar vacia');
     }
