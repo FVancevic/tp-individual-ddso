@@ -224,3 +224,21 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 - **Decisión:** (b). `ubicacion` es un texto obligatorio no vacío.
 - **Motivo:** El diagrama es "tentativo"; agregar un campo no rompe ningún caso de uso y hace al modelo más realista.
   Es una desviación consciente del enunciado y se menciona en el video.
+
+---
+
+## D-018: `Evento` rechaza fechas pasadas en el constructor
+
+- **Fecha:** 2026-10-28
+- **Contexto:** Se había planteado que la entidad aceptara fechas pasadas y que la regla "no publicar eventos en el
+  pasado" viviera en el servicio de crear evento, porque algunas reglas del enunciado necesitan eventos ya realizados
+  (cancelar solo si "el evento aún no se haya realizado", reseñar "una vez finalizado el evento", días restantes).
+- **Alternativas:** (a) la entidad acepta cualquier fecha válida y el servicio rechaza las pasadas; (b) la entidad
+  rechaza fechas pasadas.
+- **Decisión:** (b), a pedido del autor: un `Evento` no puede crearse con fecha anterior a "ahora".
+- **Consecuencia asumida:** no se puede construir un evento ya realizado. Para probar o sembrar esos casos hay que
+  crearlo con fecha futura y luego reasignar `evento.fecha` (los campos son públicos, D-011), o fijar el reloj en los
+  tests. Es un rodeo que se apoya en saltar la validación del constructor. Si resulta incómodo al implementar
+  `Compra`, se reevalúa volviendo a (a).
+- **Tests:** las fechas de los tests son relativas a `Date.now()` (una fecha fija se vuelve pasada con el tiempo y
+  rompería los tests sin tocar el código).
