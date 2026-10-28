@@ -28,6 +28,8 @@ la explicación o analogía que terminó de aclararlo.
 - [Variables sin declarar: globales implícitas](#variables-sin-declarar-globales-implícitas-y-modo-estricto)
 - [Valores por defecto y referencias compartidas](#valores-por-defecto-y-referencias-compartidas)
 - [Importaciones circulares](#importaciones-circulares-entre-módulos)
+- [Rest parameters y spread](#rest-parameters-y-spread-)
+- [Cómo se resuelve una importación circular](#cómo-se-resuelve-una-importación-circular-por-qué-no-es-un-bucle)
 
 ---
 
@@ -561,3 +563,28 @@ constructor({ favoritos = [] } = {}) { this.favoritos = favoritos; }
 - Aunque funcione, es **acoplamiento mutuo**: dos clases que se conocen entre sí. Alternativa: validar al agregar
   (`agregarFavorito(evento)`) en el servicio, que ya conoce ambas.
 - **Corrección propia:** antes se había dicho que "suelen dar problemas"; para este caso era exagerado.
+
+---
+
+## Rest parameters y spread (`...`)
+
+El mismo `...` tiene dos roles según dónde se escriba:
+```js
+function agregar(...eventos) { }   // REST (en la definición): junta los argumentos en un arreglo. Paralelo Java: Evento... eventos
+agregar(ev1, ev2, ev3);
+agregar(...lista);                 // SPREAD (en la llamada): expande un arreglo en argumentos
+const copia = [...lista];          // SPREAD en un literal: copia superficial del arreglo
+const todo = { ...base, ...overrides };   // SPREAD en objetos: copia propiedades, las últimas pisan
+```
+- Si un método acepta varios elementos, conviene **validar todos antes de agregar alguno**, para no dejar la lista a medias.
+- **`instanceof` vs `typeof`:** `x instanceof Evento` pregunta si `x` se creó con `new Evento`; `typeof x` devuelve el
+  nombre de un tipo primitivo como texto (`'string'`, `'number'`).
+
+## Cómo se resuelve una importación circular (por qué no es un bucle)
+
+Cada módulo se carga **una sola vez**. Con `Usuario` ↔ `Evento`: Node empieza `Usuario`, ve que importa `Evento`, lo
+carga; `Evento` importa `Usuario`, que ya está en proceso, así que **no se vuelve a cargar** y recibe una referencia
+todavía vacía. Ambos terminan de cargarse y, cuando un constructor corre después, las dos clases ya existen.
+
+> **Lo que me hizo clic:** no hay bucle porque un módulo ya "en proceso" no se vuelve a cargar; solo es un problema si se
+> usa la clase importada **al cargar el archivo** (por ejemplo `extends`) y no dentro de un constructor.
