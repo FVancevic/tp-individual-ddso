@@ -227,18 +227,18 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 
 ---
 
-## D-018: `Evento` rechaza fechas pasadas en el constructor
+## D-018:  rechaza fechas pasadas en el constructor
 
 - **Fecha:** 2026-10-28
-- **Contexto:** Se había planteado que la entidad aceptara fechas pasadas y que la regla "no publicar eventos en el
-  pasado" viviera en el servicio de crear evento, porque algunas reglas del enunciado necesitan eventos ya realizados
-  (cancelar solo si "el evento aún no se haya realizado", reseñar "una vez finalizado el evento", días restantes).
-- **Alternativas:** (a) la entidad acepta cualquier fecha válida y el servicio rechaza las pasadas; (b) la entidad
-  rechaza fechas pasadas.
-- **Decisión:** (b), a pedido del autor: un `Evento` no puede crearse con fecha anterior a "ahora".
-- **Consecuencia asumida:** no se puede construir un evento ya realizado. Para probar o sembrar esos casos hay que
-  crearlo con fecha futura y luego reasignar `evento.fecha` (los campos son públicos, D-011), o fijar el reloj en los
-  tests. Es un rodeo que se apoya en saltar la validación del constructor. Si resulta incómodo al implementar
-  `Compra`, se reevalúa volviendo a (a).
-- **Tests:** las fechas de los tests son relativas a `Date.now()` (una fecha fija se vuelve pasada con el tiempo y
+- **Contexto:** Ningún caso de uso crea un evento con fecha que ya pasó, así que no tiene sentido permitirlo. Distinto
+  es un evento que *pasa a ser pasado* con el tiempo: eso ocurre siempre y lo usan las reglas del enunciado (cancelar
+  solo si el evento no se realizó, reseñar tras el evento, días que faltan).
+- **Alternativas:** (a) la entidad acepta cualquier fecha válida y el servicio de crear evento rechaza las pasadas;
+  (b) la entidad rechaza fechas pasadas al construirse.
+- **Decisión:** (b). El constructor valida la fecha **solo en el momento de crear**; no vuelve a chequearla después.
+- **Motivo:** La entidad nunca nace con una fecha inválida para el negocio, sin depender de que el servicio se acuerde.
+  Las reglas que dependen de que el evento ya haya pasado (cancelar, reseñar) comparan  contra   **al usarse**, no al construir, así que no se ven afectadas.
+- **Costo (solo para pruebas y demo):** para probar "evento ya realizado" hay que construir el evento a futuro y
+  reasignar  (los campos son públicos, D-011) o fijar el reloj en el test. No afecta a producción.
+- **Tests:** las fechas de los tests son relativas a  (una fecha fija se vuelve pasada con el tiempo y
   rompería los tests sin tocar el código).
