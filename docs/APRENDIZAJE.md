@@ -33,6 +33,7 @@ la explicación o analogía que terminó de aclararlo.
 - [Validar tipos en runtime: JavaScript vs Java](#validar-tipos-en-runtime-javascript-vs-java)
 - [Cobertura de tests](#cobertura-de-tests---coverage)
 - [Tests que dependen del reloj](#tests-que-dependen-del-reloj)
+- [Enums en JavaScript](#enums-en-javascript)
 
 ---
 
@@ -645,3 +646,34 @@ Si una regla compara contra "ahora" (`fecha < Date.now()`), una **fecha fija** e
 - Para el caso "pasada", una fecha lejana en el pasado (`new Date('2020-01-01')`) nunca deja de ser pasada.
 - Existe también congelar el reloj con los *fake timers* de Jest, pero no hace falta para este caso.
 - `Date.now()` devuelve milisegundos desde 1970; `fecha.getTime()` también, por eso se pueden comparar con `<`.
+
+---
+
+## Enums en JavaScript
+
+JavaScript **no tiene `enum`**. Se representa con un objeto constante, congelado, cuyos valores son strings iguales a la clave:
+```js
+export const EstadoCompra = Object.freeze({
+    PENDIENTE: 'PENDIENTE',
+    CONFIRMADA: 'CONFIRMADA',
+    UTILIZADA: 'UTILIZADA',
+    CANCELADA: 'CANCELADA',
+    REEMBOLSADA: 'REEMBOLSADA',
+});
+```
+- **`Object.freeze`** impide agregar, borrar o modificar propiedades. Sin él, `EstadoCompra.NUEVO = 'x'` o cambiar un
+  valor funciona en silencio; con él lanza `TypeError` (comprobado en un módulo ES).
+- **Valor = string igual a la clave:** se lee bien al depurar, viaja por JSON como `"estado": "PENDIENTE"` y se compara con `===`.
+
+| Java | JavaScript |
+|---|---|
+| `EstadoCompra.PENDIENTE` | `EstadoCompra.PENDIENTE` |
+| `EstadoCompra.values()` | `Object.values(EstadoCompra)` |
+| validar pertenencia | `Object.values(EstadoCompra).includes(x)` |
+| comparar | `estado === EstadoCompra.CONFIRMADA` |
+
+### Dónde se rompe la analogía con el `enum` de Java
+- **Sin chequeo de tipos:** cualquier string pasa donde se espera un estado; hay que validar con `includes`.
+- **Un error de tipeo no avisa:** `EstadoCompra.CONFIRMDA` devuelve `undefined`. Usar siempre la constante y no el texto escrito a mano.
+- **El enum de Java tiene métodos y campos;** este es solo un conjunto de valores. La lógica (ej. qué transiciones de
+  estado son válidas) va en otro lugar, en `Compra`.
