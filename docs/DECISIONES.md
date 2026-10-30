@@ -259,3 +259,15 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 - **Costo conocido (D-011):** al ser públicos los campos, nada impide `evento.tiposEntrada.push({})` o
   `evento.nombre = ''` desde afuera; se sostiene por convención de usar los métodos de la entidad.
 - **Mutación ya prevista:** `TipoEntrada.descontarCupo(cantidad)` al comprar (y su inverso al cancelar), en `Compra`.
+
+---
+
+## D-020: Los enums viven en `src/domain/enums/`
+
+- **Fecha:** 2026-10-30
+- **Contexto:** JavaScript no tiene `enum`; se representan con objetos congelados (ver apuntes). `EstadoCompra` es un
+  concepto del negocio y hay que decidir dónde ubicarlo.
+- **Alternativas:** (a) junto a las entidades, en `src/domain/`; (b) subcarpeta `src/domain/enums/`.
+- **Decisión:** (b). Los tests replican la ruta: `tests/domain/enums/`.
+- **Motivo:** Agrupa desde el principio los enums que aparezcan después y los separa de las entidades. Se recomendó (a)
+  por YAGNI (un solo enum hoy); se eligió (b) por preferencia, sin costo relevante.
