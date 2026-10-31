@@ -271,3 +271,19 @@ se agrega una nueva que reemplaza a la anterior y se marca la vieja como *reempl
 - **Decisión:** (b). Los tests replican la ruta: `tests/domain/enums/`.
 - **Motivo:** Agrupa desde el principio los enums que aparezcan después y los separa de las entidades. Se recomendó (a)
   por YAGNI (un solo enum hoy); se eligió (b) por preferencia, sin costo relevante.
+
+---
+
+## D-021: `Mensaje.enviado` se asigna automáticamente al crear el mensaje
+
+- **Fecha:** 2026-10-31
+- **Contexto:** El diagrama de clases define `Mensaje` con `usuario`, `mensaje` y `enviado` (fecha y hora). Hay que
+  decidir si quien crea el mensaje pasa `enviado` o lo asigna la clase.
+- **Alternativas:** (a) recibir `enviado` por el constructor; (b) asignar `new Date()` dentro del constructor.
+- **Decisión:** (b). El constructor solo recibe `usuario` y `mensaje`.
+- **Motivo:** En un chat nadie envía un mensaje con otra hora, así que no hay motivo para permitirlo y se evita un
+  dato inválido (fecha futura, texto en vez de `Date`). Costo: para datos de ejemplo con horas distintas habría que
+  asignar `mensaje.enviado` a mano después de crearlo. El test lo verifica con la hora tomada antes y después de
+  crear el mensaje, porque depende del reloj.
+- **Regla de `mensaje`:** texto no vacío (ni solo espacios). Un número como tipo se rechaza; los números escritos en
+  el chat llegan como texto (`'123'`) y son válidos.
