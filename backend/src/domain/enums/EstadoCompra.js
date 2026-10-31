@@ -1,4 +1,4 @@
-export const EstadoCompra =  Object.freeze({
+export const EstadoCompra = Object.freeze({
     PENDIENTE: 'PENDIENTE',
     CONFIRMADA: 'CONFIRMADA',
     UTILIZADA: 'UTILIZADA',
